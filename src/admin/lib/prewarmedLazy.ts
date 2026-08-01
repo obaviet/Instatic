@@ -149,9 +149,11 @@ export function prewarmedLazy<TProps extends object = Record<string, unknown>>(
     }
     if (failure !== null) {
       // Reject path — surface the error to the nearest error boundary.
-      // Throw a normal error (not the promise) so error boundaries
-      // catch it instead of Suspense.
-      throw failure
+      // Clear failure so a subsequent render (e.g. after ErrorBoundary Reset)
+      // will retry preload instead of being permanently stuck in failure state.
+      const err = failure
+      failure = null
+      throw err
     }
     // Cold path — module hasn't started loading yet (or hasn't resolved).
     // Fire/return the preload promise. Throwing it signals the nearest
