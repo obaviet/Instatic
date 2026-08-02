@@ -1631,7 +1631,19 @@
     }
 
     function openCreateSiteModal() {
-      document.getElementById('modalCreateSite').classList.add('open');
+      const modal = document.getElementById('modalCreateSite');
+      if (modal) {
+        modal.classList.add('open');
+        modal.style.display = 'grid';
+      }
+    }
+
+    function closeCreateSiteModal() {
+      const modal = document.getElementById('modalCreateSite');
+      if (modal) {
+        modal.classList.remove('open');
+        modal.style.display = 'none';
+      }
     }
 
     function openResetPasswordModal(siteId) {
@@ -1748,11 +1760,19 @@
     function openDomainModal(siteId, currentDomain) {
       document.getElementById('modalSiteId').value = siteId;
       document.getElementById('modalCustomDomain').value = currentDomain || '';
-      document.getElementById('domainModal').classList.add('open');
+      const modal = document.getElementById('domainModal');
+      if (modal) {
+        modal.classList.add('open');
+        modal.style.display = 'grid';
+      }
     }
 
     function closeDomainModal() {
-      document.getElementById('domainModal').classList.remove('open');
+      const modal = document.getElementById('domainModal');
+      if (modal) {
+        modal.classList.remove('open');
+        modal.style.display = 'none';
+      }
     }
 
     async function submitDomainBind() {
@@ -1777,14 +1797,22 @@
         const res = await fetch(`${API_BASE}/caddyfile`);
         const text = await res.text();
         document.getElementById('caddyText').value = text;
-        document.getElementById('caddyModal').classList.add('open');
+        const modal = document.getElementById('caddyModal');
+        if (modal) {
+          modal.classList.add('open');
+          modal.style.display = 'grid';
+        }
       } catch (err) {
         alert('Không thể tải Caddyfile');
       }
     }
 
     function closeCaddyModal() {
-      document.getElementById('caddyModal').classList.remove('open');
+      const modal = document.getElementById('caddyModal');
+      if (modal) {
+        modal.classList.remove('open');
+        modal.style.display = 'none';
+      }
     }
 
     async function copyCaddyfile() {
