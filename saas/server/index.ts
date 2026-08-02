@@ -33,7 +33,11 @@ await initClusterNode()
 function json(data: unknown, status = 200): Response {
   return new Response(JSON.stringify(data, null, 2), {
     status,
-    headers: { 'Content-Type': 'application/json; charset=utf-8' },
+    headers: {
+      'Content-Type': 'application/json; charset=utf-8',
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Headers': '*',
+    },
   })
 }
 
