@@ -30,12 +30,15 @@ export function spawnSiteProcess(
   const bunBinary = process.execPath ?? 'bun'
   const command = [bunBinary, 'server/index.ts']
 
+  const masterSecretKey = process.env.INSTATIC_SECRET_KEY?.trim() || 'J2a8X7mP0qN5vL3wR6yT1uK9zF4hB2cG8dE0sA5iO1M='
+
   const env: Record<string, string> = {
     ...process.env,
     PORT: String(port),
     DATABASE_URL: `sqlite:${dbPath}`,
     UPLOADS_DIR: uploadsDir,
     STATIC_DIR: path.join(rootDir, 'dist'),
+    INSTATIC_SECRET_KEY: masterSecretKey,
   }
 
   const child = Bun.spawn(command, {
