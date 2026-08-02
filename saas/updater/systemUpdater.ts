@@ -65,12 +65,13 @@ export async function performRollingSystemUpgrade(): Promise<{ success: boolean;
       console.log('[System Updater] Git pull skipped or not a git repository')
     }
 
-    // 2. Install dependencies if package.json updated
-    console.log('[System Updater] Verifying dependencies...')
+    // 2. Install dependencies & build production Admin UI assets
+    console.log('[System Updater] Verifying dependencies & building dist assets...')
     try {
       await execCmd('bun install')
-    } catch {
-      // Ignore
+      await execCmd('bun run build')
+    } catch (err) {
+      console.log('[System Updater] Build step warning:', err)
     }
 
     // 3. Perform Rolling Restart of all running site instances
