@@ -567,13 +567,10 @@
     .stat-value { font-size: 2rem; font-weight: 800; }
 
     .dash-grid {
-      display: grid;
-      grid-template-columns: 400px 1fr;
+      display: flex;
+      flex-direction: column;
       gap: 28px;
-    }
-
-    @media (max-width: 1000px) {
-      .dash-grid { grid-template-columns: 1fr; }
+      width: 100%;
     }
 
     .card-title {
@@ -1023,57 +1020,14 @@
 
       <!-- Main Dash Grid -->
       <div class="dash-grid">
-        <!-- Provision Form -->
+        <!-- Sites Table Card (Full Width) -->
         <div class="card glass-card">
           <div class="card-title">
-            <span>✨ Khởi Tạo Website Mới</span>
-          </div>
-          <div id="dashAlert" class="alert"></div>
-          <form id="provisionForm" onsubmit="handleProvision(event)">
-            <div class="form-group">
-              <label>Tên Website</label>
-              <input type="text" id="siteName" placeholder="VD: Cửa hàng Cà Phê" required />
+            <span style="display: flex; align-items: center; gap: 8px;">🌐 Danh Sách Website Instances</span>
+            <div style="display: flex; gap: 10px; align-items: center;">
+              <button class="btn btn-sm" onclick="openCreateSiteModal()">✨ Tạo Website Mới</button>
+              <button class="btn btn-secondary btn-sm" onclick="openCaddyModal()">📜 Caddyfile</button>
             </div>
-            <div class="form-group">
-              <label>Subdomain (Slug)</label>
-              <input type="text" id="subdomain" placeholder="VD: caphe-hanoi" required pattern="[a-zA-Z0-9-]+" />
-            </div>
-            <div class="form-group">
-              <label>Custom Domain (Tùy chọn)</label>
-              <input type="text" id="customDomain" placeholder="VD: caphehanoi.com" />
-            </div>
-            <div class="form-group">
-              <label>Email Admin Trang Web</label>
-              <input type="email" id="ownerEmail" placeholder="admin@example.com" required />
-            </div>
-            <div class="form-group">
-              <label>Mật Khẩu Admin (≥ 12 ký tự)</label>
-              <input type="password" id="ownerPassword" placeholder="Mật khẩu bảo mật" required minlength="12" />
-            </div>
-            <div class="form-group">
-              <label>Mẫu Giao Diện (Template)</label>
-              <input type="hidden" id="templateId" value="blank" />
-              <div class="template-selector">
-                <div class="template-option selected" data-template="blank" onclick="selectTemplate('blank')">
-                  📄 Blank
-                </div>
-                <div class="template-option" data-template="portfolio" onclick="selectTemplate('portfolio')">
-                  👤 Portfolio
-                </div>
-                <div class="template-option" data-template="business" onclick="selectTemplate('business')">
-                  🏢 Business
-                </div>
-              </div>
-            </div>
-            <button type="submit" class="btn" id="submitBtn" style="width: 100%;">🚀 Cấp Phát Website Ngay</button>
-          </form>
-        </div>
-
-        <!-- Sites Table Card -->
-        <div class="card glass-card">
-          <div class="card-title">
-            <span>🌐 Danh Sách Website Instances</span>
-            <button class="btn btn-secondary btn-sm" onclick="openCaddyModal()">📜 Caddyfile</button>
           </div>
 
           <div style="margin-bottom: 20px;">
@@ -1104,6 +1058,68 @@
       </div>
     </div>
   </section>
+
+  <!-- Modal: Khởi Tạo Website Mới -->
+  <div class="modal-backdrop" id="modalCreateSite">
+    <div class="modal" style="max-width: 620px;">
+      <div class="modal-header">
+        <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--text);">✨ Khởi Tạo Website Mới</h3>
+        <button class="btn btn-secondary btn-sm" onclick="closeCreateSiteModal()">✕</button>
+      </div>
+
+      <div id="dashAlert" class="alert"></div>
+
+      <form id="provisionForm" onsubmit="handleProvision(event)">
+        <div class="form-group">
+          <label>Tên Website</label>
+          <input type="text" id="siteName" placeholder="VD: Cửa hàng Cà Phê" required />
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div class="form-group">
+            <label>Subdomain (Slug)</label>
+            <input type="text" id="subdomain" placeholder="VD: caphe-hanoi" required pattern="[a-zA-Z0-9-]+" />
+          </div>
+          <div class="form-group">
+            <label>Custom Domain (Tùy chọn)</label>
+            <input type="text" id="customDomain" placeholder="VD: caphehanoi.com" />
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div class="form-group">
+            <label>Email Admin Trang Web</label>
+            <input type="email" id="ownerEmail" placeholder="admin@example.com" required />
+          </div>
+          <div class="form-group">
+            <label>Mật Khẩu Admin (≥ 12 ký tự)</label>
+            <input type="password" id="ownerPassword" placeholder="Mật khẩu bảo mật" required minlength="12" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Mẫu Giao Diện (Template)</label>
+          <input type="hidden" id="templateId" value="blank" />
+          <div class="template-selector">
+            <div class="template-option selected" data-template="blank" onclick="selectTemplate('blank')">
+              📄 Blank
+            </div>
+            <div class="template-option" data-template="portfolio" onclick="selectTemplate('portfolio')">
+              👤 Portfolio
+            </div>
+            <div class="template-option" data-template="business" onclick="selectTemplate('business')">
+              🏢 Business
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px;">
+          <button type="button" class="btn btn-secondary" onclick="closeCreateSiteModal()">Hủy Bỏ</button>
+          <button type="submit" class="btn" id="submitBtn">🚀 Cấp Phát Website Ngay</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <!-- ==========================================
        SECTION 4: SUPER ADMIN SYSTEM MANAGEMENT
@@ -1576,6 +1592,14 @@
       renderSites(filtered);
     }
 
+    function openCreateSiteModal() {
+      document.getElementById('modalCreateSite').classList.add('open');
+    }
+
+    function closeCreateSiteModal() {
+      document.getElementById('modalCreateSite').classList.remove('open');
+    }
+
     async function handleProvision(e) {
       e.preventDefault();
       const btn = document.getElementById('submitBtn');
@@ -1601,9 +1625,10 @@
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || 'Cấp phát thất bại');
 
-        showDashAlert(`Khởi tạo thành công website: ${data.site.siteName}`, 'success');
+        alert(`Khởi tạo thành công website: ${data.site.siteName}`);
         document.getElementById('provisionForm').reset();
         selectTemplate('blank');
+        closeCreateSiteModal();
         await loadDashboardData();
       } catch (err) {
         showDashAlert(err.message, 'error');
