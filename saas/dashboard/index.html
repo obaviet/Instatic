@@ -187,39 +187,56 @@
     .nav-menu {
       display: flex;
       align-items: center;
-      gap: 32px;
+      gap: 12px;
       list-style: none;
     }
 
     .nav-link {
       color: var(--text-muted);
       text-decoration: none;
-      font-size: 0.93rem;
-      font-weight: 500;
+      font-size: 0.92rem;
+      font-weight: 600;
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
       cursor: pointer;
-      transition: color 0.2s;
-      position: relative;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    .nav-link:hover, .nav-link.active {
+    .nav-link:hover {
       color: var(--text);
+      background: var(--surface-2);
     }
 
-    .nav-link.active::after {
-      content: '';
-      position: absolute;
-      bottom: -6px;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background: var(--accent-gradient);
-      border-radius: 2px;
+    .nav-link.active {
+      color: var(--accent);
+      background: var(--purple-soft);
     }
 
     .nav-actions {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
+    }
+
+    .btn-icon-toggle {
+      width: 38px;
+      height: 38px;
+      padding: 0;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 1.1rem;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .btn-icon-toggle:hover {
+      background: var(--surface-3);
+      border-color: var(--border-hover);
+      transform: scale(1.06);
     }
 
     /* Buttons */
@@ -815,14 +832,14 @@
       </ul>
 
       <div class="nav-actions" id="navAuthLoggedOut">
-        <button class="btn btn-secondary btn-sm btn-theme-toggle" onclick="toggleTheme()" title="Chuyển đổi giao diện Sáng / Tối">🌙 Giao diện Tối</button>
+        <button class="btn btn-icon-toggle btn-theme-toggle" onclick="toggleTheme()" aria-label="Chuyển đổi giao diện Sáng / Tối">🌙</button>
         <button class="btn btn-secondary btn-sm" onclick="switchView('auth', 'login')">Đăng Nhập</button>
         <button class="btn btn-sm" onclick="switchView('auth', 'register')">Đăng Ký</button>
       </div>
 
       <div class="nav-actions" id="navAuthLoggedIn" style="display: none;">
-        <span id="userDisplayName" style="font-size: 0.88rem; font-weight: 600; color: var(--text-muted);"></span>
-        <button class="btn btn-secondary btn-sm btn-theme-toggle" onclick="toggleTheme()" title="Chuyển đổi giao diện Sáng / Tối">🌙 Giao diện Tối</button>
+        <span id="userDisplayName" style="font-size: 0.88rem; font-weight: 600; color: var(--text-muted); margin-right: 4px;"></span>
+        <button class="btn btn-icon-toggle btn-theme-toggle" onclick="toggleTheme()" aria-label="Chuyển đổi giao diện Sáng / Tối">🌙</button>
         <button class="btn btn-secondary btn-sm" onclick="switchView('dashboard')">Vào Dashboard</button>
         <button class="btn btn-outline btn-sm" onclick="handleLogout()">Đăng Xuất</button>
       </div>
@@ -1788,7 +1805,8 @@
     function updateThemeBtn(theme) {
       const btns = document.querySelectorAll('.btn-theme-toggle');
       btns.forEach(btn => {
-        btn.textContent = theme === 'light' ? '🌙 Giao diện Tối' : '☀️ Giao diện Sáng';
+        btn.textContent = theme === 'light' ? '🌙' : '☀️';
+        btn.setAttribute('title', theme === 'light' ? 'Chuyển sang giao diện Tối' : 'Chuyển sang giao diện Sáng');
       });
     }
 
