@@ -10,8 +10,21 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
 
+  <script>
+    (function() {
+      const saved = localStorage.getItem('saas_theme') || 'dark';
+      if (saved === 'light') {
+        document.documentElement.classList.remove('dark');
+        document.documentElement.classList.add('light');
+      } else {
+        document.documentElement.classList.remove('light');
+        document.documentElement.classList.add('dark');
+      }
+    })();
+  </script>
+
   <style>
-    :root {
+    :root, html.dark {
       --bg: #07070a;
       --surface-1: rgba(18, 18, 26, 0.75);
       --surface-2: rgba(28, 28, 40, 0.8);
@@ -34,6 +47,33 @@
       --font: 'Inter', system-ui, sans-serif;
       --font-heading: 'Outfit', system-ui, sans-serif;
       --shadow-glow: 0 0 40px rgba(139, 92, 246, 0.15);
+      --nav-bg: rgba(7, 7, 10, 0.85);
+    }
+
+    html.light {
+      --bg: #f8fafc;
+      --surface-1: rgba(255, 255, 255, 0.88);
+      --surface-2: #f1f5f9;
+      --surface-3: #e2e8f0;
+      --border: rgba(0, 0, 0, 0.09);
+      --border-hover: rgba(139, 92, 246, 0.5);
+      --text: #0f172a;
+      --text-muted: #475569;
+      --accent: #2563eb;
+      --accent-gradient: linear-gradient(135deg, #2563eb, #7c3aed);
+      --purple: #7c3aed;
+      --purple-soft: rgba(124, 58, 237, 0.1);
+      --danger: #dc2626;
+      --danger-soft: rgba(220, 38, 38, 0.1);
+      --success: #059669;
+      --success-soft: rgba(5, 150, 105, 0.1);
+      --radius-sm: 8px;
+      --radius: 12px;
+      --radius-lg: 20px;
+      --font: 'Inter', system-ui, sans-serif;
+      --font-heading: 'Outfit', system-ui, sans-serif;
+      --shadow-glow: 0 10px 30px rgba(124, 58, 237, 0.1);
+      --nav-bg: rgba(255, 255, 255, 0.85);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -87,7 +127,7 @@
       position: sticky;
       top: 0;
       z-index: 100;
-      background: rgba(7, 7, 10, 0.75);
+      background: var(--nav-bg);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--border);
@@ -762,12 +802,14 @@
       </ul>
 
       <div class="nav-actions" id="navAuthLoggedOut">
+        <button class="btn btn-secondary btn-sm btn-theme-toggle" onclick="toggleTheme()" title="Chuyển đổi giao diện Sáng / Tối">🌙 Giao diện Tối</button>
         <button class="btn btn-secondary btn-sm" onclick="switchView('auth', 'login')">Đăng Nhập</button>
         <button class="btn btn-sm" onclick="switchView('auth', 'register')">Đăng Ký</button>
       </div>
 
       <div class="nav-actions" id="navAuthLoggedIn" style="display: none;">
         <span id="userDisplayName" style="font-size: 0.88rem; font-weight: 600; color: var(--text-muted);"></span>
+        <button class="btn btn-secondary btn-sm btn-theme-toggle" onclick="toggleTheme()" title="Chuyển đổi giao diện Sáng / Tối">🌙 Giao diện Tối</button>
         <button class="btn btn-secondary btn-sm" onclick="switchView('dashboard')">Vào Dashboard</button>
         <button class="btn btn-outline btn-sm" onclick="handleLogout()">Đăng Xuất</button>
       </div>
@@ -1711,7 +1753,34 @@
       }
     }
 
+    function applyTheme(theme) {
+      const html = document.documentElement;
+      if (theme === 'light') {
+        html.classList.remove('dark');
+        html.classList.add('light');
+        localStorage.setItem('saas_theme', 'light');
+      } else {
+        html.classList.remove('light');
+        html.classList.add('dark');
+        localStorage.setItem('saas_theme', 'dark');
+      }
+      updateThemeBtn(theme);
+    }
+
+    function toggleTheme() {
+      const isLight = document.documentElement.classList.contains('light');
+      applyTheme(isLight ? 'dark' : 'light');
+    }
+
+    function updateThemeBtn(theme) {
+      const btns = document.querySelectorAll('.btn-theme-toggle');
+      btns.forEach(btn => {
+        btn.textContent = theme === 'light' ? '☀️ Giao diện Sáng' : '🌙 Giao diện Tối';
+      });
+    }
+
     updateNavState();
+    updateThemeBtn(localStorage.getItem('saas_theme') || 'dark');
   </script>
 </body>
 </html>
