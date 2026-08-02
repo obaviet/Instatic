@@ -78,11 +78,24 @@ export function createProxyServer(proxyPort = 8080) {
       headers.set('X-Forwarded-Proto', url.protocol.replace(':', ''))
 
       try {
-        return await fetch(targetUrl.toString(), {
+        const response = await fetch(targetUrl.toString(), {
           method: req.method,
           headers,
           body: req.method !== 'GET' && req.method !== 'HEAD' ? await req.arrayBuffer() : undefined,
           redirect: 'manual',
+        })
+
+        // Fix ERR_CONTENT_DECODING_FAILED:
+        // Bun's fetch() automatically decodes compressed bodies (brotli/gzip) in proxy requests
+        // but preserves original Content-Encoding headers. Removing Content-Encoding prevents browser decoding errors.
+        const resHeaders = new Headers(response.headers)
+        resHeaders.delete('content-encoding')
+        resHeaders.delete('content-length')
+
+        return new Response(response.body, {
+          status: response.status,
+          statusText: response.statusText,
+          headers: resHeaders,
         })
       } catch {
         return new Response(`502 — Site instance for ${hostHeader} is not reachable`, {
