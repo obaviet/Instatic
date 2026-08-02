@@ -146,7 +146,7 @@ export function createProxyServer(proxyPort = 8080) {
         try {
           const targetWs = new WebSocket(targetWsUrl, {
             headers: wsHeaders,
-          })
+          } as unknown as string[])
 
           ws.data.clientWs = targetWs
 
