@@ -48,10 +48,20 @@ export function generateCaddyfile(): string {
   return lines.join('\n')
 }
 
+interface ProxySocketData {
+  targetPort: number
+  targetPath: string
+  cookie?: string
+  origin?: string
+  hostHeader: string
+  protoHeader: string
+  clientWs?: WebSocket
+}
+
 export function createProxyServer(proxyPort = 8080) {
-  return Bun.serve({
+  return Bun.serve<ProxySocketData>({
     port: proxyPort,
-    async fetch(req) {
+    async fetch(req, server) {
       const url = new URL(req.url)
       const hostHeader = req.headers.get('host') ?? url.hostname
       const route = getRoute(hostHeader)
@@ -61,6 +71,22 @@ export function createProxyServer(proxyPort = 8080) {
           `<html><body><h2>404 — Site not found or domain not registered</h2><p>Host: ${hostHeader}</p></body></html>`,
           { status: 404, headers: { 'Content-Type': 'text/html; charset=utf-8' } },
         )
+      }
+
+      // Handle WebSocket upgrade requests (e.g. Yjs real-time co-editing /admin/api/cms/site-socket)
+      if (req.headers.get('upgrade')?.toLowerCase() === 'websocket') {
+        const protoHeader = req.headers.get('x-forwarded-proto') ?? url.protocol.replace(':', '')
+        const upgraded = server.upgrade(req, {
+          data: {
+            targetPort: route.targetPort,
+            targetPath: url.pathname + url.search,
+            cookie: req.headers.get('cookie') ?? undefined,
+            origin: req.headers.get('origin') ?? undefined,
+            hostHeader,
+            protoHeader,
+          },
+        })
+        if (upgraded) return undefined
       }
 
       // Determine proxy destination: Remote Cluster Node OR Local Port
@@ -104,6 +130,67 @@ export function createProxyServer(proxyPort = 8080) {
           headers: { 'Content-Type': 'text/plain; charset=utf-8' },
         })
       }
+    },
+    websocket: {
+      open(ws) {
+        const { targetPort, targetPath, cookie, origin, hostHeader, protoHeader } = ws.data
+        const targetWsUrl = `ws://127.0.0.1:${targetPort}${targetPath}`
+
+        const wsHeaders: Record<string, string> = {
+          'X-Forwarded-Host': hostHeader,
+          'X-Forwarded-Proto': protoHeader,
+        }
+        if (cookie) wsHeaders['cookie'] = cookie
+        if (origin) wsHeaders['origin'] = origin
+
+        try {
+          const targetWs = new WebSocket(targetWsUrl, {
+            headers: wsHeaders,
+          })
+
+          ws.data.clientWs = targetWs
+
+          targetWs.addEventListener('message', (event) => {
+            try {
+              ws.send(event.data)
+            } catch {
+              // Socket closed
+            }
+          })
+
+          targetWs.addEventListener('close', () => {
+            try {
+              ws.close()
+            } catch {
+              // Socket closed
+            }
+          })
+
+          targetWs.addEventListener('error', () => {
+            try {
+              ws.close()
+            } catch {
+              // Socket closed
+            }
+          })
+        } catch {
+          ws.close()
+        }
+      },
+      message(ws, message) {
+        if (ws.data.clientWs && ws.data.clientWs.readyState === WebSocket.OPEN) {
+          ws.data.clientWs.send(message)
+        }
+      },
+      close(ws) {
+        if (ws.data.clientWs) {
+          try {
+            ws.data.clientWs.close()
+          } catch {
+            // Socket closed
+          }
+        }
+      },
     },
   })
 }
