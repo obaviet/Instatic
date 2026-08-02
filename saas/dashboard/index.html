@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="vi" class="light">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,10 +9,12 @@
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap"
+    rel="stylesheet">
 
   <script>
-    (function() {
+    (function () {
       const saved = localStorage.getItem('saas_theme') || 'light';
       if (saved === 'dark') {
         document.documentElement.classList.remove('light');
@@ -24,7 +27,8 @@
   </script>
 
   <style>
-    :root, html.light {
+    :root,
+    html.light {
       --bg: #f8fafc;
       --surface-1: #ffffff;
       --surface-2: #f1f5f9;
@@ -78,10 +82,15 @@
       --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
       background: var(--bg);
-      background-image: 
+      background-image:
         radial-gradient(circle at 50% -10%, rgba(139, 92, 246, 0.18), transparent 60%),
         radial-gradient(circle at 90% 40%, rgba(59, 130, 246, 0.12), transparent 50%);
       background-attachment: fixed;
@@ -92,16 +101,32 @@
       overflow-x: hidden;
     }
 
-    h1, h2, h3, h4, .font-heading {
+    h1,
+    h2,
+    h3,
+    h4,
+    .font-heading {
       font-family: var(--font-heading);
       letter-spacing: -0.025em;
     }
 
     /* Scrollbar */
-    ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-track { background: var(--bg); }
-    ::-webkit-scrollbar-thumb { background: #272738; border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: #3f3f56; }
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #272738;
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #3f3f56;
+    }
 
     .container {
       max-width: 1240px;
@@ -129,7 +154,9 @@
     }
 
     @media (max-width: 600px) {
-      .card { padding: 20px 16px; }
+      .card {
+        padding: 20px 16px;
+      }
     }
 
     /* Navbar */
@@ -300,6 +327,7 @@
       background: var(--danger);
       box-shadow: 0 4px 14px rgba(239, 68, 68, 0.3);
     }
+
     .btn-danger:hover {
       background: #dc2626;
       box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
@@ -329,8 +357,15 @@
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     /* ==========================================
@@ -393,8 +428,13 @@
     }
 
     @media (max-width: 950px) {
-      .features-grid { grid-template-columns: 1fr; }
-      .hero-title { font-size: 2.6rem; }
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-title {
+        font-size: 2.6rem;
+      }
     }
 
     .feature-card {
@@ -436,7 +476,9 @@
     }
 
     @media (max-width: 950px) {
-      .pricing-grid { grid-template-columns: 1fr; }
+      .pricing-grid {
+        grid-template-columns: 1fr;
+      }
     }
 
     .pricing-card {
@@ -465,9 +507,23 @@
       box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
     }
 
-    .plan-name { font-size: 1.4rem; font-weight: 700; margin-bottom: 10px; }
-    .plan-price { font-size: 2.8rem; font-weight: 800; margin-bottom: 20px; }
-    .plan-price span { font-size: 1rem; color: var(--text-muted); font-weight: 400; }
+    .plan-name {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .plan-price {
+      font-size: 2.8rem;
+      font-weight: 800;
+      margin-bottom: 20px;
+    }
+
+    .plan-price span {
+      font-size: 1rem;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
 
     .plan-features {
       list-style: none;
@@ -538,7 +594,8 @@
       margin-bottom: 8px;
     }
 
-    input, select {
+    input,
+    select {
       width: 100%;
       background: var(--surface-2);
       border: 1px solid var(--border);
@@ -550,7 +607,8 @@
       transition: border-color 0.2s;
     }
 
-    input:focus, select:focus {
+    input:focus,
+    select:focus {
       border-color: var(--accent);
       box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
     }
@@ -566,15 +624,25 @@
     }
 
     @media (max-width: 950px) {
-      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
     }
 
     .stat-card {
       padding: 24px;
     }
 
-    .stat-label { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 6px; }
-    .stat-value { font-size: 2rem; font-weight: 800; }
+    .stat-label {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 800;
+    }
 
     .dash-grid {
       display: flex;
@@ -628,7 +696,8 @@
       font-size: 0.9rem;
     }
 
-    .sites-table th, .sites-table td {
+    .sites-table th,
+    .sites-table td {
       padding: 16px 18px;
       text-align: left;
       border-bottom: 1px solid var(--border);
@@ -662,9 +731,20 @@
     }
 
     @keyframes pulse {
-      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
-      70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
-      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+      0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+      }
+
+      70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
+      }
+
+      100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+      }
     }
 
     .badge {
@@ -677,8 +757,15 @@
       font-weight: 700;
     }
 
-    .badge-running { background: var(--success-soft); color: var(--success); }
-    .badge-stopped { background: var(--danger-soft); color: var(--danger); }
+    .badge-running {
+      background: var(--success-soft);
+      color: var(--success);
+    }
+
+    .badge-stopped {
+      background: var(--danger-soft);
+      color: var(--danger);
+    }
 
     .actions-cell {
       display: flex;
@@ -698,7 +785,9 @@
       padding: 20px;
     }
 
-    .modal-backdrop.open { display: grid; }
+    .modal-backdrop.open {
+      display: grid;
+    }
 
     .modal {
       background: var(--surface-1);
@@ -724,8 +813,18 @@
       margin-bottom: 20px;
       display: none;
     }
-    .alert-error { background: var(--danger-soft); border: 1px solid var(--danger); color: #fca5a5; }
-    .alert-success { background: var(--success-soft); border: 1px solid var(--success); color: #86efac; }
+
+    .alert-error {
+      background: var(--danger-soft);
+      border: 1px solid var(--danger);
+      color: #fca5a5;
+    }
+
+    .alert-success {
+      background: var(--success-soft);
+      border: 1px solid var(--success);
+      color: #86efac;
+    }
 
     /* Footer */
     footer {
@@ -743,10 +842,15 @@
     }
 
     @media (max-width: 900px) {
-      .footer-grid { grid-template-columns: 1fr repeat(2, 1fr); }
+      .footer-grid {
+        grid-template-columns: 1fr repeat(2, 1fr);
+      }
     }
+
     @media (max-width: 600px) {
-      .footer-grid { grid-template-columns: 1fr; }
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
     }
 
     .footer-brand-title {
@@ -816,10 +920,15 @@
     }
 
     @media (max-width: 600px) {
-      .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
+      .footer-bottom {
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+      }
     }
   </style>
 </head>
+
 <body>
 
   <!-- Navigation Bar -->
@@ -834,19 +943,24 @@
         <li><a class="nav-link active" id="navLinkHome" onclick="switchView('landing')">Trang Chủ</a></li>
         <li><a class="nav-link nav-link-landing" href="#features">Tính Năng</a></li>
         <li><a class="nav-link nav-link-landing" href="#pricing">Bảng Giá</a></li>
-        <li><a class="nav-link" id="navDashLink" onclick="switchView('dashboard')" style="display: none;">Quản Lý Website</a></li>
-        <li><a class="nav-link" id="navAdminLink" onclick="switchView('admin')" style="display: none;">Quản Trị Hệ Thống</a></li>
+        <li><a class="nav-link" id="navDashLink" onclick="switchView('dashboard')" style="display: none;">Quản Lý
+            Website</a></li>
+        <li><a class="nav-link" id="navAdminLink" onclick="switchView('admin')" style="display: none;">Quản Trị Hệ
+            Thống</a></li>
       </ul>
 
       <div class="nav-actions" id="navAuthLoggedOut">
-        <button class="btn btn-icon-toggle btn-theme-toggle" onclick="toggleTheme()" aria-label="Chuyển đổi giao diện Sáng / Tối">🌙</button>
+        <button class="btn btn-icon-toggle btn-theme-toggle" onclick="toggleTheme()"
+          aria-label="Chuyển đổi giao diện Sáng / Tối">🌙</button>
         <button class="btn btn-secondary btn-sm" onclick="switchView('auth', 'login')">Đăng Nhập</button>
         <button class="btn btn-sm" onclick="switchView('auth', 'register')">Đăng Ký</button>
       </div>
 
       <div class="nav-actions" id="navAuthLoggedIn" style="display: none;">
-        <span id="userDisplayName" style="font-size: 0.88rem; font-weight: 600; color: var(--text-muted); margin-right: 4px;"></span>
-        <button class="btn btn-icon-toggle btn-theme-toggle" onclick="toggleTheme()" aria-label="Chuyển đổi giao diện Sáng / Tối">🌙</button>
+        <span id="userDisplayName"
+          style="font-size: 0.88rem; font-weight: 600; color: var(--text-muted); margin-right: 4px;"></span>
+        <button class="btn btn-icon-toggle btn-theme-toggle" onclick="toggleTheme()"
+          aria-label="Chuyển đổi giao diện Sáng / Tối">🌙</button>
         <button class="btn btn-outline btn-sm" onclick="handleLogout()">Đăng Xuất</button>
       </div>
     </div>
@@ -859,8 +973,10 @@
     <div class="container">
       <div class="hero">
         <div class="hero-badge">⚡ Thế Hệ Automation CMS Độc Lập Mới</div>
-        <h1 class="hero-title">Nền Tảng Cấp Phát Website <span class="gradient-text">Instatic CMS</span> Tự Động Trong 3 Giây</h1>
-        <p class="hero-desc">Mô hình Instance & Database riêng biệt cho từng website. Tự động khởi tạo tài khoản Admin, cấp chứng chỉ HTTPS, chọn template và lưu trữ tệp tĩnh siêu tốc.</p>
+        <h1 class="hero-title">Nền Tảng Cấp Phát Website <span class="gradient-text">Instatic CMS</span> Tự Động Trong 3
+          Giây</h1>
+        <p class="hero-desc">Mô hình Instance & Database riêng biệt cho từng website. Tự động khởi tạo tài khoản Admin,
+          cấp chứng chỉ HTTPS, chọn template và lưu trữ tệp tĩnh siêu tốc.</p>
         <div class="hero-cta">
           <button class="btn btn-lg" onclick="switchView('auth', 'register')">🚀 Khởi Tạo Ngay Miễn Phí</button>
           <button class="btn btn-secondary btn-lg" onclick="switchView('dashboard')">📊 Khám Phá Console Demo</button>
@@ -872,37 +988,43 @@
         <div class="feature-card glass-card">
           <div class="feature-icon">⚡</div>
           <div class="feature-title">Cấp Phát Trong 3 Giây</div>
-          <div class="feature-desc">Hệ thống tự động cấp phát SQLite database, khởi tạo tài khoản Owner và xuất trang web tĩnh ngay lập tức.</div>
+          <div class="feature-desc">Hệ thống tự động cấp phát SQLite database, khởi tạo tài khoản Owner và xuất trang
+            web tĩnh ngay lập tức.</div>
         </div>
 
         <div class="feature-card glass-card">
           <div class="feature-icon">🔒</div>
           <div class="feature-title">Cách Ly Dữ Liệu Tuyệt Đối</div>
-          <div class="feature-desc">Mỗi trang web có cơ sở dữ liệu data.db riêng biệt. Website này gặp sự cố không bao giờ ảnh hưởng tới website khác.</div>
+          <div class="feature-desc">Mỗi trang web có cơ sở dữ liệu data.db riêng biệt. Website này gặp sự cố không bao
+            giờ ảnh hưởng tới website khác.</div>
         </div>
 
         <div class="feature-card glass-card">
           <div class="feature-icon">🌐</div>
           <div class="feature-title">Tự Động HTTPS & SSL</div>
-          <div class="feature-desc">Tích hợp sẵn Caddy Router tự động xin cấp chứng chỉ SSL miễn phí cho tên miền tùy chỉnh (Custom Domain).</div>
+          <div class="feature-desc">Tích hợp sẵn Caddy Router tự động xin cấp chứng chỉ SSL miễn phí cho tên miền tùy
+            chỉnh (Custom Domain).</div>
         </div>
 
         <div class="feature-card glass-card">
           <div class="feature-icon">🎨</div>
           <div class="feature-title">Visual Canvas Editor</div>
-          <div class="feature-desc">Trình kéo thả visual editor chân thực, chỉnh sửa responsive đa màn hình trực tiếp trên trình duyệt.</div>
+          <div class="feature-desc">Trình kéo thả visual editor chân thực, chỉnh sửa responsive đa màn hình trực tiếp
+            trên trình duyệt.</div>
         </div>
 
         <div class="feature-card glass-card">
           <div class="feature-icon">🤖</div>
           <div class="feature-title">Tích Hợp AI Agent</div>
-          <div class="feature-desc">AI Agent tự động dựng layout, viết bài và tùy biến màu sắc trang web theo yêu cầu bằng tiếng Việt.</div>
+          <div class="feature-desc">AI Agent tự động dựng layout, viết bài và tùy biến màu sắc trang web theo yêu cầu
+            bằng tiếng Việt.</div>
         </div>
 
         <div class="feature-card glass-card">
           <div class="feature-icon">📦</div>
           <div class="feature-title">Sở Hữu Dữ Liệu 100%</div>
-          <div class="feature-desc">Không bị khóa vào nền tảng (No lock-in). Khách hàng có thể tải gói .instatic hoặc data.db về tự host bất kỳ lúc nào.</div>
+          <div class="feature-desc">Không bị khóa vào nền tảng (No lock-in). Khách hàng có thể tải gói .instatic hoặc
+            data.db về tự host bất kỳ lúc nào.</div>
         </div>
       </div>
 
@@ -910,7 +1032,8 @@
       <div id="pricing">
         <div class="pricing-header">
           <h2>Bảng Giá Mở Rộng Linh Hoạt</h2>
-          <p style="color: var(--text-muted);">Khởi tạo trang web mượt mà, dễ dàng nâng cấp khi thương hiệu phát triển.</p>
+          <p style="color: var(--text-muted);">Khởi tạo trang web mượt mà, dễ dàng nâng cấp khi thương hiệu phát triển.
+          </p>
         </div>
 
         <div class="pricing-grid">
@@ -997,7 +1120,19 @@
             <label>Mật Khẩu (≥ 8 ký tự)</label>
             <input type="password" id="regPassword" placeholder="••••••••••••" required minlength="8" />
           </div>
-          <button type="submit" class="btn" style="width: 100%; margin-top: 10px;">Tạo Tài Khoản SaaS</button>
+          <div class="form-group">
+            <label>Xác Nhận Mật Khẩu</label>
+            <input type="password" id="regPasswordConfirm" placeholder="••••••••••••" required minlength="8" />
+          </div>
+          <div class="form-group">
+            <label>Mã Xác Thực Anti-Spam (Captcha)</label>
+            <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 8px;">
+              <div id="captchaChallenge" style="background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 16px; font-family: monospace; font-weight: 800; font-size: 1.15rem; color: var(--purple); user-select: none;">⚡ 5 + 3 = ?</div>
+              <button type="button" class="btn btn-secondary btn-sm" onclick="generateCaptcha()" title="Đổi câu hỏi xác thực khác">🔄 Đổi Mã</button>
+            </div>
+            <input type="number" id="regCaptchaAnswer" placeholder="Nhập kết quả phép tính" required />
+          </div>
+          <button type="submit" class="btn" style="width: 100%; margin-top: 10px;">Tạo Tài Khoản</button>
         </form>
       </div>
     </div>
@@ -1041,7 +1176,8 @@
           </div>
 
           <div style="margin-bottom: 20px;">
-            <input type="text" id="searchFilter" placeholder="🔍 Tìm kiếm tên web, subdomain, domain..." oninput="filterSites()" />
+            <input type="text" id="searchFilter" placeholder="🔍 Tìm kiếm tên web, subdomain, domain..."
+              oninput="filterSites()" />
           </div>
 
           <div style="overflow-x: auto;">
@@ -1166,11 +1302,13 @@
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px;">
         <div>
           <h2 style="font-size: 1.8rem; font-weight: 800;">⚙️ Bảng Quản Trị Hệ Thống Super Admin</h2>
-          <p style="color: var(--text-muted); font-size: 0.9rem;">Giám sát hiệu năng máy chủ Bun, quản lý các instance website và nâng cấp hệ thống 1-click.</p>
+          <p style="color: var(--text-muted); font-size: 0.9rem;">Giám sát hiệu năng máy chủ Bun, quản lý các instance
+            website và nâng cấp hệ thống 1-click.</p>
         </div>
         <div style="display: flex; gap: 10px;">
           <button class="btn btn-secondary btn-sm" onclick="loadAdminSystemData()">🔄 Làm Mới Dữ Liệu</button>
-          <button class="btn btn-sm" id="btnUpgradeSystem" onclick="triggerSystemUpgrade()">🚀 Nâng Cấp Hệ Thống 1-Click</button>
+          <button class="btn btn-sm" id="btnUpgradeSystem" onclick="triggerSystemUpgrade()">🚀 Nâng Cấp Hệ Thống
+            1-Click</button>
         </div>
       </div>
 
@@ -1230,7 +1368,9 @@
         <div class="card glass-card" style="margin-top: 24px; padding: 28px;">
           <div class="card-title">
             <span>🌐 Cụm Máy Chủ Multi-Server Cluster (VPS Fleet)</span>
-            <button class="btn btn-secondary btn-sm" onclick="alert('Đã sẵn sàng mở rộng thêm Worker VPS mới qua POST /api/v1/cluster/heartbeat')">+ Kết Nối VPS Mới</button>
+            <button class="btn btn-secondary btn-sm"
+              onclick="alert('Đã sẵn sàng mở rộng thêm Worker VPS mới qua POST /api/v1/cluster/heartbeat')">+ Kết Nối
+              VPS Mới</button>
           </div>
           <table class="sites-table">
             <thead>
@@ -1243,7 +1383,10 @@
               </tr>
             </thead>
             <tbody id="clusterNodesBody">
-              <tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 20px;">Đang tải cụm máy chủ...</td></tr>
+              <tr>
+                <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 20px;">Đang tải cụm máy
+                  chủ...</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -1269,7 +1412,10 @@
                 </tr>
               </thead>
               <tbody id="adminTenantsBody">
-                <tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 30px;">Đang tải danh sách...</td></tr>
+                <tr>
+                  <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 30px;">Đang tải danh
+                    sách...</td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -1280,7 +1426,8 @@
       <div id="adminPanelProxy" style="display: none;">
         <div class="card glass-card" style="padding: 28px;">
           <div class="card-title">📜 Cấu Hình Reverse Proxy Caddyfile</div>
-          <textarea id="adminCaddyText" rows="14" readonly style="font-family: monospace; font-size: 0.88rem; width: 100%; background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text); padding: 14px; margin-bottom: 16px;"></textarea>
+          <textarea id="adminCaddyText" rows="14" readonly
+            style="font-family: monospace; font-size: 0.88rem; width: 100%; background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text); padding: 14px; margin-bottom: 16px;"></textarea>
           <button class="btn btn-secondary" onclick="copyCaddyfile()">📋 Sao Chép Caddyfile Cấu Hình</button>
         </div>
       </div>
@@ -1305,7 +1452,8 @@
             <label>Đường Dẫn Lưu Cơ Sở Dữ Liệu Registry</label>
             <input type="text" value=".tmp/saas/registry.json" readonly />
           </div>
-          <button class="btn" onclick="alert('Cấu hình hệ thống mặc định đang hoạt động ổn định!')">Lưu Cấu Hình Mới</button>
+          <button class="btn" onclick="alert('Cấu hình hệ thống mặc định đang hoạt động ổn định!')">Lưu Cấu Hình
+            Mới</button>
         </div>
       </div>
 
@@ -1469,11 +1617,32 @@
       window.scrollTo(0, 0);
     }
 
+    let captchaExpectedResult = 0;
+
+    function generateCaptcha() {
+      const num1 = Math.floor(Math.random() * 15) + 2;
+      const num2 = Math.floor(Math.random() * 10) + 1;
+      const isAddition = Math.random() > 0.3;
+
+      if (isAddition) {
+        captchaExpectedResult = num1 + num2;
+        document.getElementById('captchaChallenge').textContent = `⚡ ${num1} + ${num2} = ?`;
+      } else {
+        captchaExpectedResult = num1 * num2;
+        document.getElementById('captchaChallenge').textContent = `⚡ ${num1} × ${num2} = ?`;
+      }
+      const ansInput = document.getElementById('regCaptchaAnswer');
+      if (ansInput) ansInput.value = '';
+    }
+
     function switchAuthTab(tab) {
       document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
       document.getElementById('tabRegister').classList.toggle('active', tab === 'register');
       document.getElementById('formLogin').style.display = tab === 'login' ? 'block' : 'none';
       document.getElementById('formRegister').style.display = tab === 'register' ? 'block' : 'none';
+      if (tab === 'register') {
+        generateCaptcha();
+      }
     }
 
     async function handleAuthLogin(e) {
@@ -1504,6 +1673,21 @@
       const name = document.getElementById('regName').value.trim();
       const email = document.getElementById('regEmail').value.trim();
       const password = document.getElementById('regPassword').value;
+      const passwordConfirm = document.getElementById('regPasswordConfirm').value;
+      const userCaptcha = parseInt(document.getElementById('regCaptchaAnswer').value.trim(), 10);
+
+      if (password !== passwordConfirm) {
+        showAuthAlert('Mật khẩu xác nhận không trùng khớp với mật khẩu đã nhập!');
+        document.getElementById('regPasswordConfirm').focus();
+        return;
+      }
+
+      if (isNaN(userCaptcha) || userCaptcha !== captchaExpectedResult) {
+        showAuthAlert('Mã xác thực Anti-Spam (Captcha) không chính xác. Vui lòng thử lại!');
+        generateCaptcha();
+        document.getElementById('regCaptchaAnswer').focus();
+        return;
+      }
 
       try {
         const res = await fetch(`${API_BASE}/auth/register`, {
@@ -1520,6 +1704,7 @@
         switchView('dashboard');
       } catch (err) {
         showAuthAlert(err.message);
+        generateCaptcha();
       }
     }
 
@@ -1594,9 +1779,9 @@
           </td>
           <td>
             ${site.customDomain
-              ? `<span style="color: var(--purple); font-weight: 700;">${site.customDomain}</span>`
-              : `<button class="btn btn-secondary btn-sm" onclick="openDomainModal('${site.siteId}', '')">+ Domain</button>`
-            }
+          ? `<span style="color: var(--purple); font-weight: 700;">${site.customDomain}</span>`
+          : `<button class="btn btn-secondary btn-sm" onclick="openDomainModal('${site.siteId}', '')">+ Domain</button>`
+        }
           </td>
           <td><code>:${site.port}</code></td>
           <td>
@@ -1610,9 +1795,9 @@
             <a href="${site.adminUrl}" target="_blank"><button class="btn btn-secondary btn-sm">Admin</button></a>
             <button class="btn btn-secondary btn-sm" onclick="openResetPasswordModal('${site.siteId}')">🔑 Đổi Pass</button>
             ${site.status === 'running'
-              ? `<button class="btn btn-secondary btn-sm" onclick="toggleSite('${site.siteId}', 'stop')">Dừng</button>`
-              : `<button class="btn btn-secondary btn-sm" onclick="toggleSite('${site.siteId}', 'start')">Chạy</button>`
-            }
+          ? `<button class="btn btn-secondary btn-sm" onclick="toggleSite('${site.siteId}', 'stop')">Dừng</button>`
+          : `<button class="btn btn-secondary btn-sm" onclick="toggleSite('${site.siteId}', 'start')">Chạy</button>`
+        }
             <button class="btn btn-danger btn-sm" onclick="deleteSite('${site.siteId}')">Xóa</button>
           </td>
         </tr>
@@ -1893,9 +2078,9 @@
           <td class="actions-cell">
             <button class="btn btn-secondary btn-sm" onclick="openResetPasswordModal('${site.siteId}')">🔑 Đổi Pass</button>
             ${site.status === 'running'
-              ? `<button class="btn btn-secondary btn-sm" onclick="toggleSite('${site.siteId}', 'stop')">Dừng</button>`
-              : `<button class="btn btn-secondary btn-sm" onclick="toggleSite('${site.siteId}', 'start')">Chạy</button>`
-            }
+          ? `<button class="btn btn-secondary btn-sm" onclick="toggleSite('${site.siteId}', 'stop')">Dừng</button>`
+          : `<button class="btn btn-secondary btn-sm" onclick="toggleSite('${site.siteId}', 'start')">Chạy</button>`
+        }
             <button class="btn btn-danger btn-sm" onclick="deleteSite('${site.siteId}')">Buộc Xóa</button>
           </td>
         </tr>
@@ -1999,4 +2184,5 @@
     updateThemeBtn(localStorage.getItem('saas_theme') || 'light');
   </script>
 </body>
+
 </html>
