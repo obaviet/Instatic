@@ -1607,7 +1607,7 @@
           <td class="actions-cell">
             <a href="${site.liveUrl}" target="_blank"><button class="btn btn-secondary btn-sm">Web</button></a>
             <a href="${site.adminUrl}" target="_blank"><button class="btn btn-secondary btn-sm">Admin</button></a>
-            <button class="btn btn-secondary btn-sm" onclick="openResetPasswordModal('${site.siteId}', '${site.siteName}')">🔑 Đổi Pass</button>
+            <button class="btn btn-secondary btn-sm" onclick="openResetPasswordModal('${site.siteId}')">🔑 Đổi Pass</button>
             ${site.status === 'running'
               ? `<button class="btn btn-secondary btn-sm" onclick="toggleSite('${site.siteId}', 'stop')">Dừng</button>`
               : `<button class="btn btn-secondary btn-sm" onclick="toggleSite('${site.siteId}', 'start')">Chạy</button>`
@@ -1633,16 +1633,27 @@
       document.getElementById('modalCreateSite').classList.add('open');
     }
 
-    function openResetPasswordModal(siteId, siteName) {
+    function openResetPasswordModal(siteId) {
+      const site = (allSites || []).find(s => s.siteId === siteId);
+      const siteName = site ? site.siteName : siteId;
       document.getElementById('resetPassSiteId').value = siteId;
       document.getElementById('resetPassSiteLabel').textContent = `Đang đổi mật khẩu Admin cho website: "${siteName}"`;
       document.getElementById('newAdminPassword').value = '';
-      document.getElementById('resetPasswordAlert').style.display = 'none';
-      document.getElementById('modalResetPassword').classList.add('open');
+      const alertEl = document.getElementById('resetPasswordAlert');
+      if (alertEl) alertEl.style.display = 'none';
+      const modal = document.getElementById('modalResetPassword');
+      if (modal) {
+        modal.classList.add('open');
+        modal.style.display = 'grid';
+      }
     }
 
     function closeResetPasswordModal() {
-      document.getElementById('modalResetPassword').classList.remove('open');
+      const modal = document.getElementById('modalResetPassword');
+      if (modal) {
+        modal.classList.remove('open');
+        modal.style.display = 'none';
+      }
     }
 
     async function handleResetPassword(e) {
@@ -1851,7 +1862,7 @@
             </span>
           </td>
           <td class="actions-cell">
-            <button class="btn btn-secondary btn-sm" onclick="openResetPasswordModal('${site.siteId}', '${site.siteName}')">🔑 Đổi Pass</button>
+            <button class="btn btn-secondary btn-sm" onclick="openResetPasswordModal('${site.siteId}')">🔑 Đổi Pass</button>
             ${site.status === 'running'
               ? `<button class="btn btn-secondary btn-sm" onclick="toggleSite('${site.siteId}', 'stop')">Dừng</button>`
               : `<button class="btn btn-secondary btn-sm" onclick="toggleSite('${site.siteId}', 'start')">Chạy</button>`
