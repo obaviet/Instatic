@@ -322,3 +322,52 @@ async function waitForServerReady(port: number, timeoutMs = 15000): Promise<void
   throw new Error(`Server Instatic trên port ${port} không phản hồi trong ${timeoutMs}ms`)
 }
 
+/**
+ * Resets Admin password for a specific website instance SQLite DB.
+ */
+export async function resetSiteAdminPassword(siteId: string, newPassword: string): Promise<{ success: boolean; message: string }> {
+  if (!newPassword || newPassword.length < 12) {
+    throw new Error('Mật khẩu mới phải có ít nhất 12 ký tự!')
+  }
+
+  const registry = await loadRegistry()
+  const site = registry[siteId]
+  if (!site) {
+    throw new Error(`Không tìm thấy trang web: ${siteId}`)
+  }
+
+  const dbPath = site.dbPath
+  if (!existsSync(dbPath)) {
+    throw new Error(`File CSDL của trang web không tồn tại: ${dbPath}`)
+  }
+
+  // Generate bcrypt password hash
+  const passwordHash = await Bun.password.hash(newPassword, { algorithm: 'bcrypt', cost: 10 })
+  const updatedAt = new Date().toISOString()
+
+  const { Database } = await import('bun:sqlite')
+  const db = new Database(dbPath)
+
+  try {
+    const stmt = db.prepare(`
+      UPDATE users 
+      SET password_hash = $hash, 
+          password_updated_at = $updatedAt,
+          failed_login_count = 0,
+          locked_until = NULL,
+          status = 'active'
+    `)
+    stmt.run({ $hash: passwordHash, $updatedAt: updatedAt })
+
+    db.close()
+    return {
+      success: true,
+      message: `Đổi mật khẩu Admin cho website "${site.siteName}" thành công!`,
+    }
+  } catch (err: unknown) {
+    db.close()
+    const msg = err instanceof Error ? err.message : String(err)
+    throw new Error(`Đổi mật khẩu thất bại: ${msg}`)
+  }
+}
+

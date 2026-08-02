@@ -1129,6 +1129,31 @@
         </div>
       </form>
     </div>
+  <!-- Modal: Đổi Mật Khẩu Admin Instance -->
+  <div class="modal-backdrop" id="modalResetPassword">
+    <div class="modal" style="max-width: 480px;">
+      <div class="modal-header">
+        <h3 style="font-size: 1.2rem; font-weight: 700; color: var(--text);">🔑 Đổi Mật Khẩu Admin Instance</h3>
+        <button class="btn btn-secondary btn-sm" onclick="closeResetPasswordModal()">✕</button>
+      </div>
+
+      <div id="resetPasswordAlert" class="alert"></div>
+
+      <input type="hidden" id="resetPassSiteId" />
+      <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 20px;" id="resetPassSiteLabel"></p>
+
+      <form onsubmit="handleResetPassword(event)">
+        <div class="form-group">
+          <label>Mật Khẩu Admin Mới (≥ 12 ký tự)</label>
+          <input type="password" id="newAdminPassword" placeholder="Nhập mật khẩu mới" required minlength="12" />
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px;">
+          <button type="button" class="btn btn-secondary" onclick="closeResetPasswordModal()">Hủy Bỏ</button>
+          <button type="submit" class="btn" id="btnSubmitResetPass">🔐 Cập Nhật Mật Khẩu</button>
+        </div>
+      </form>
+    </div>
   </div>
 
   <!-- ==========================================
@@ -1581,6 +1606,7 @@
           <td class="actions-cell">
             <a href="${site.liveUrl}" target="_blank"><button class="btn btn-secondary btn-sm">Web</button></a>
             <a href="${site.adminUrl}" target="_blank"><button class="btn btn-secondary btn-sm">Admin</button></a>
+            <button class="btn btn-secondary btn-sm" onclick="openResetPasswordModal('${site.siteId}', '${site.siteName}')">🔑 Đổi Pass</button>
             ${site.status === 'running'
               ? `<button class="btn btn-secondary btn-sm" onclick="toggleSite('${site.siteId}', 'stop')">Dừng</button>`
               : `<button class="btn btn-secondary btn-sm" onclick="toggleSite('${site.siteId}', 'start')">Chạy</button>`
@@ -1606,8 +1632,47 @@
       document.getElementById('modalCreateSite').classList.add('open');
     }
 
-    function closeCreateSiteModal() {
-      document.getElementById('modalCreateSite').classList.remove('open');
+    function openResetPasswordModal(siteId, siteName) {
+      document.getElementById('resetPassSiteId').value = siteId;
+      document.getElementById('resetPassSiteLabel').textContent = `Đang đổi mật khẩu Admin cho website: "${siteName}"`;
+      document.getElementById('newAdminPassword').value = '';
+      document.getElementById('resetPasswordAlert').style.display = 'none';
+      document.getElementById('modalResetPassword').classList.add('open');
+    }
+
+    function closeResetPasswordModal() {
+      document.getElementById('modalResetPassword').classList.remove('open');
+    }
+
+    async function handleResetPassword(e) {
+      e.preventDefault();
+      const siteId = document.getElementById('resetPassSiteId').value;
+      const newPassword = document.getElementById('newAdminPassword').value;
+      const btn = document.getElementById('btnSubmitResetPass');
+      btn.disabled = true;
+      btn.textContent = '⏳ Đang đổi mật khẩu...';
+
+      try {
+        const res = await fetch(`${API_BASE}/sites/${siteId}/reset-password`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ newPassword }),
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Đổi mật khẩu thất bại');
+
+        alert(data.message || 'Đổi mật khẩu Admin thành công!');
+        closeResetPasswordModal();
+      } catch (err) {
+        const el = document.getElementById('resetPasswordAlert');
+        el.className = 'alert alert-error';
+        el.textContent = err.message;
+        el.style.display = 'block';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '🔐 Cập Nhật Mật Khẩu';
+      }
     }
 
     async function handleProvision(e) {
@@ -1785,6 +1850,7 @@
             </span>
           </td>
           <td class="actions-cell">
+            <button class="btn btn-secondary btn-sm" onclick="openResetPasswordModal('${site.siteId}', '${site.siteName}')">🔑 Đổi Pass</button>
             ${site.status === 'running'
               ? `<button class="btn btn-secondary btn-sm" onclick="toggleSite('${site.siteId}', 'stop')">Dừng</button>`
               : `<button class="btn btn-secondary btn-sm" onclick="toggleSite('${site.siteId}', 'start')">Chạy</button>`

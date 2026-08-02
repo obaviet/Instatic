@@ -12,6 +12,7 @@ import {
   stopSite,
   deleteSite,
   bindCustomDomain,
+  resetSiteAdminPassword,
   getSiteStats,
   rehydrateRoutesOnBoot,
   type ProvisionSiteOptions,
@@ -199,8 +200,8 @@ Bun.serve({
       }
     }
 
-    // Dynamic site operations: /api/v1/sites/:siteId/(start|stop|domain)
-    const siteMatch = url.pathname.match(/^\/api\/v1\/sites\/([a-zA-Z0-9-]+)(?:\/(start|stop|domain))?$/)
+    // Dynamic site operations: /api/v1/sites/:siteId/(start|stop|domain|reset-password)
+    const siteMatch = url.pathname.match(/^\/api\/v1\/sites\/([a-zA-Z0-9-]+)(?:\/(start|stop|domain|reset-password))?$/)
     if (siteMatch) {
       const [, siteId, action] = siteMatch
 
@@ -230,6 +231,18 @@ Bun.serve({
           if (!body.customDomain) return json({ error: 'Missing customDomain' }, 400)
           const record = await bindCustomDomain(siteId, body.customDomain)
           return json({ success: true, site: record })
+        } catch (err: unknown) {
+          const message = err instanceof Error ? err.message : String(err)
+          return json({ error: message }, 400)
+        }
+      }
+
+      if (req.method === 'POST' && action === 'reset-password') {
+        try {
+          const body = (await req.json()) as { newPassword?: string }
+          if (!body.newPassword) return json({ error: 'Mật khẩu mới không được để trống' }, 400)
+          const result = await resetSiteAdminPassword(siteId, body.newPassword)
+          return json(result)
         } catch (err: unknown) {
           const message = err instanceof Error ? err.message : String(err)
           return json({ error: message }, 400)
