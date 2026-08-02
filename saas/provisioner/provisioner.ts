@@ -4,7 +4,7 @@
 import { mkdir, rm, readFile, writeFile } from 'node:fs/promises'
 import { existsSync } from 'node:fs'
 import path from 'node:path'
-import { findFreePort } from './portAllocator'
+import { findFreePort, isPortAvailable } from './portAllocator'
 import { spawnSiteProcess, stopSiteProcess, getSiteProcess } from './processManager'
 import { registerRoute, unregisterRoute } from '../router/proxy'
 import { seedSiteDatabase } from '../templates/templateRegistry'
@@ -275,13 +275,34 @@ export async function getSiteStats(): Promise<SiteStats> {
 export async function rehydrateRoutesOnBoot(): Promise<void> {
   const registry = await loadRegistry()
   const BASE_DOMAIN = (process.env.BASE_DOMAIN || 'onewebs.net').toLowerCase()
+  let registryChanged = false
 
   for (const record of Object.values(registry)) {
+    // Auto-start site background Bun subprocess if it was running
+    if (record.status === 'running') {
+      try {
+        // Ensure port is available for this site instance
+        if (!(await isPortAvailable(record.port))) {
+          const newPort = await findFreePort(record.port + 1)
+          record.port = newPort
+          registryChanged = true
+        }
+
+        spawnSiteProcess(record.siteId, record.port, record.dbPath, record.uploadsDir)
+      } catch (err) {
+        console.error(`[Provisioner] Failed to auto-start site ${record.siteId} on boot:`, err)
+      }
+    }
+
     registerRoute(`${record.subdomain}.${BASE_DOMAIN}`, record.port, record.siteId)
     registerRoute(`${record.subdomain}.localhost`, record.port, record.siteId)
     if (record.customDomain) {
       registerRoute(record.customDomain, record.port, record.siteId)
     }
+  }
+
+  if (registryChanged) {
+    await saveRegistry(registry)
   }
 }
 
