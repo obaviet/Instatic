@@ -825,10 +825,10 @@
 
       <ul class="nav-menu">
         <li><a class="nav-link active" id="navLinkHome" onclick="switchView('landing')">Trang Chủ</a></li>
-        <li><a class="nav-link" href="#features">Tính Năng</a></li>
-        <li><a class="nav-link" href="#pricing">Bảng Giá</a></li>
-        <li><a class="nav-link" id="navDashLink" onclick="switchView('dashboard')" style="display: none;">Dashboard</a></li>
-        <li><a class="nav-link" id="navAdminLink" onclick="switchView('admin')">Quản Trị Hệ Thống</a></li>
+        <li><a class="nav-link nav-link-landing" href="#features">Tính Năng</a></li>
+        <li><a class="nav-link nav-link-landing" href="#pricing">Bảng Giá</a></li>
+        <li><a class="nav-link" id="navDashLink" onclick="switchView('dashboard')" style="display: none;">Quản Lý Website</a></li>
+        <li><a class="nav-link" id="navAdminLink" onclick="switchView('admin')" style="display: none;">Quản Trị Hệ Thống</a></li>
       </ul>
 
       <div class="nav-actions" id="navAuthLoggedOut">
@@ -1362,19 +1362,37 @@
 
     function updateNavState() {
       const loggedIn = Boolean(currentUser);
-      const isAdmin = loggedIn && currentUser.role === 'admin';
+      const isAdminOrOwner = loggedIn && (currentUser.role === 'admin' || currentUser.role === 'owner');
 
       document.getElementById('navAuthLoggedOut').style.display = loggedIn ? 'none' : 'flex';
       document.getElementById('navAuthLoggedIn').style.display = loggedIn ? 'flex' : 'none';
       document.getElementById('navDashLink').style.display = loggedIn ? 'inline-block' : 'none';
-      document.getElementById('navAdminLink').style.display = isAdmin ? 'inline-block' : 'none';
+      document.getElementById('navAdminLink').style.display = isAdminOrOwner ? 'inline-block' : 'none';
+
+      const landingLinks = document.querySelectorAll('.nav-link-landing');
+      landingLinks.forEach(el => el.style.display = loggedIn ? 'none' : 'inline-block');
 
       if (loggedIn) {
-        document.getElementById('userDisplayName').textContent = `👤 ${currentUser.name || currentUser.email} ${isAdmin ? '(Super Admin)' : ''}`;
+        const roleLabel = isAdminOrOwner ? '(Super Admin)' : '(Thành viên)';
+        document.getElementById('userDisplayName').textContent = `👤 ${currentUser.name || currentUser.email} ${roleLabel}`;
       }
     }
 
     function switchView(viewName, authTab = 'login') {
+      const loggedIn = Boolean(currentUser);
+      const isAdminOrOwner = loggedIn && (currentUser.role === 'admin' || currentUser.role === 'owner');
+
+      if (viewName === 'admin' && !isAdminOrOwner) {
+        alert('Bạn không có quyền truy cập khu vực Quản Trị Hệ Thống!');
+        switchView(loggedIn ? 'dashboard' : 'landing');
+        return;
+      }
+
+      if (viewName === 'dashboard' && !loggedIn) {
+        switchView('auth', 'login');
+        return;
+      }
+
       document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
       document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
 
