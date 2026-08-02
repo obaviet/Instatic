@@ -109,12 +109,20 @@ export async function provisionSite(options: ProvisionSiteOptions): Promise<Site
     }
   }
 
-  // 6. Register proxy route
-  const host = `${siteId}.localhost`
-  registerRoute(host, port, siteId)
+  const BASE_DOMAIN = (process.env.BASE_DOMAIN || 'onewebs.net').toLowerCase()
+  const SCHEME = process.env.NODE_ENV === 'production' || BASE_DOMAIN !== 'localhost' ? 'http' : 'http'
+
+  // 6. Register proxy route for subdomain (e.g. caphe-hanoi.onewebs.net and caphe-hanoi.localhost)
+  const mainHost = `${siteId}.${BASE_DOMAIN}`
+  registerRoute(mainHost, port, siteId)
+  registerRoute(`${siteId}.localhost`, port, siteId)
+
   if (options.customDomain) {
     registerRoute(options.customDomain, port, siteId)
   }
+
+  const liveUrl = BASE_DOMAIN === 'localhost' ? `http://localhost:${port}` : `${SCHEME}://${mainHost}`
+  const adminUrl = BASE_DOMAIN === 'localhost' ? `http://localhost:${port}/admin` : `${SCHEME}://${mainHost}/admin`
 
   const record: SiteRecord = {
     siteId,
@@ -129,8 +137,8 @@ export async function provisionSite(options: ProvisionSiteOptions): Promise<Site
     uploadsDir,
     createdAt: new Date().toISOString(),
     status: 'running',
-    liveUrl: `http://localhost:${port}`,
-    adminUrl: `http://localhost:${port}/admin`,
+    liveUrl,
+    adminUrl,
   }
 
   registry[siteId] = record
@@ -258,7 +266,10 @@ export async function getSiteStats(): Promise<SiteStats> {
 
 export async function rehydrateRoutesOnBoot(): Promise<void> {
   const registry = await loadRegistry()
+  const BASE_DOMAIN = (process.env.BASE_DOMAIN || 'onewebs.net').toLowerCase()
+
   for (const record of Object.values(registry)) {
+    registerRoute(`${record.subdomain}.${BASE_DOMAIN}`, record.port, record.siteId)
     registerRoute(`${record.subdomain}.localhost`, record.port, record.siteId)
     if (record.customDomain) {
       registerRoute(record.customDomain, record.port, record.siteId)
