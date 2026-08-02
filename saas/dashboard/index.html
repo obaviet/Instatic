@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi" class="dark">
+<html lang="vi" class="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,19 +12,46 @@
 
   <script>
     (function() {
-      const saved = localStorage.getItem('saas_theme') || 'dark';
-      if (saved === 'light') {
-        document.documentElement.classList.remove('dark');
-        document.documentElement.classList.add('light');
-      } else {
+      const saved = localStorage.getItem('saas_theme') || 'light';
+      if (saved === 'dark') {
         document.documentElement.classList.remove('light');
         document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+        document.documentElement.classList.add('light');
       }
     })();
   </script>
 
   <style>
-    :root, html.dark {
+    :root, html.light {
+      --bg: #f8fafc;
+      --surface-1: #ffffff;
+      --surface-2: #f1f5f9;
+      --surface-3: #e2e8f0;
+      --border: rgba(0, 0, 0, 0.08);
+      --border-hover: rgba(139, 92, 246, 0.5);
+      --text: #0f172a;
+      --text-muted: #475569;
+      --accent: #2563eb;
+      --accent-gradient: linear-gradient(135deg, #2563eb, #7c3aed);
+      --purple: #7c3aed;
+      --purple-soft: rgba(124, 58, 237, 0.1);
+      --danger: #dc2626;
+      --danger-soft: rgba(220, 38, 38, 0.1);
+      --success: #059669;
+      --success-soft: rgba(5, 150, 105, 0.1);
+      --radius-sm: 8px;
+      --radius: 12px;
+      --radius-lg: 20px;
+      --font: 'Inter', system-ui, sans-serif;
+      --font-heading: 'Outfit', system-ui, sans-serif;
+      --shadow-glow: 0 10px 30px rgba(124, 58, 237, 0.08);
+      --nav-bg: rgba(255, 255, 255, 0.88);
+      --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.06), 0 2px 4px rgba(0, 0, 0, 0.04);
+    }
+
+    html.dark {
       --bg: #07070a;
       --surface-1: rgba(18, 18, 26, 0.75);
       --surface-2: rgba(28, 28, 40, 0.8);
@@ -48,32 +75,7 @@
       --font-heading: 'Outfit', system-ui, sans-serif;
       --shadow-glow: 0 0 40px rgba(139, 92, 246, 0.15);
       --nav-bg: rgba(7, 7, 10, 0.85);
-    }
-
-    html.light {
-      --bg: #f8fafc;
-      --surface-1: rgba(255, 255, 255, 0.88);
-      --surface-2: #f1f5f9;
-      --surface-3: #e2e8f0;
-      --border: rgba(0, 0, 0, 0.09);
-      --border-hover: rgba(139, 92, 246, 0.5);
-      --text: #0f172a;
-      --text-muted: #475569;
-      --accent: #2563eb;
-      --accent-gradient: linear-gradient(135deg, #2563eb, #7c3aed);
-      --purple: #7c3aed;
-      --purple-soft: rgba(124, 58, 237, 0.1);
-      --danger: #dc2626;
-      --danger-soft: rgba(220, 38, 38, 0.1);
-      --success: #059669;
-      --success-soft: rgba(5, 150, 105, 0.1);
-      --radius-sm: 8px;
-      --radius: 12px;
-      --radius-lg: 20px;
-      --font: 'Inter', system-ui, sans-serif;
-      --font-heading: 'Outfit', system-ui, sans-serif;
-      --shadow-glow: 0 10px 30px rgba(124, 58, 237, 0.1);
-      --nav-bg: rgba(255, 255, 255, 0.85);
+      --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -114,7 +116,7 @@
       -webkit-backdrop-filter: blur(20px);
       border: 1px solid var(--border);
       border-radius: var(--radius-lg);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      box-shadow: var(--card-shadow);
       transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
     }
 
@@ -165,7 +167,18 @@
     .brand-name {
       font-size: 1.35rem;
       font-weight: 800;
+      color: var(--text);
+    }
+
+    html.dark .brand-name {
       background: linear-gradient(135deg, #ffffff 30%, #c7d2fe);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    html.light .brand-name {
+      background: linear-gradient(135deg, #0f172a 30%, #2563eb);
       -webkit-background-clip: text;
       background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -189,7 +202,7 @@
     }
 
     .nav-link:hover, .nav-link.active {
-      color: #fff;
+      color: var(--text);
     }
 
     .nav-link.active::after {
@@ -693,7 +706,7 @@
     /* Footer */
     footer {
       border-top: 1px solid var(--border);
-      background: rgba(11, 11, 16, 0.9);
+      background: var(--surface-1);
       padding: 60px 0 30px;
       margin-top: 80px;
     }
@@ -765,7 +778,7 @@
     }
 
     .footer-links a:hover {
-      color: #fff;
+      color: var(--accent);
     }
 
     .footer-bottom {
@@ -1775,12 +1788,12 @@
     function updateThemeBtn(theme) {
       const btns = document.querySelectorAll('.btn-theme-toggle');
       btns.forEach(btn => {
-        btn.textContent = theme === 'light' ? '☀️ Giao diện Sáng' : '🌙 Giao diện Tối';
+        btn.textContent = theme === 'light' ? '🌙 Giao diện Tối' : '☀️ Giao diện Sáng';
       });
     }
 
     updateNavState();
-    updateThemeBtn(localStorage.getItem('saas_theme') || 'dark');
+    updateThemeBtn(localStorage.getItem('saas_theme') || 'light');
   </script>
 </body>
 </html>
