@@ -150,11 +150,19 @@ export async function provisionSite(options: ProvisionSiteOptions): Promise<Site
 export async function listSites(): Promise<SiteRecord[]> {
   const registry = await loadRegistry()
   const records = Object.values(registry)
+  const BASE_DOMAIN = (process.env.BASE_DOMAIN || 'onewebs.net').toLowerCase()
+  const SCHEME = process.env.NODE_ENV === 'production' || BASE_DOMAIN !== 'localhost' ? 'https' : 'http'
 
   for (const record of records) {
     const proc = getSiteProcess(record.siteId)
     if (proc) {
       record.status = proc.status
+    }
+
+    // Dynamically upgrade old stored localhost URLs to proper domain URLs
+    if (BASE_DOMAIN !== 'localhost' && (record.liveUrl.includes('localhost') || !record.liveUrl.includes(BASE_DOMAIN))) {
+      record.liveUrl = `${SCHEME}://${record.subdomain}.${BASE_DOMAIN}`
+      record.adminUrl = `${SCHEME}://${record.subdomain}.${BASE_DOMAIN}/admin`
     }
   }
 
