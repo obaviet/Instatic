@@ -69,7 +69,7 @@ export async function performRollingSystemUpgrade(): Promise<{ success: boolean;
     console.log('[System Updater] Verifying dependencies & building dist assets...')
     try {
       await execCmd('bun install')
-      await execCmd('bun run build')
+      await execCmd('bun run build:fast')
     } catch (err) {
       console.log('[System Updater] Build step warning:', err)
     }
