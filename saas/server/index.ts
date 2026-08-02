@@ -20,7 +20,7 @@ import { STARTER_TEMPLATES } from '../templates/templateRegistry'
 import { createProxyServer, generateCaddyfile } from '../router/proxy'
 import { registerSaaSUser, loginSaaSUser, verifySession, seedSuperAdmin } from '../auth/usersManager'
 import { initClusterNode, listClusterNodes, registerNodeHeartbeat, type ClusterNode } from '../cluster/nodeManager'
-import { getSystemVersionStatus, performRollingSystemUpgrade } from '../updater/systemUpdater'
+import { getSystemVersionStatus, startAsyncSystemUpgrade } from '../updater/systemUpdater'
 
 const SAAS_PORT = Number(process.env.SAAS_PORT ?? '9000')
 const PROXY_PORT = Number(process.env.PROXY_PORT ?? '8080')
@@ -138,13 +138,8 @@ Bun.serve({
     }
 
     if (url.pathname === '/api/v1/admin/upgrade' && req.method === 'POST') {
-      try {
-        const result = await performRollingSystemUpgrade()
-        return json(result)
-      } catch (err: unknown) {
-        const message = err instanceof Error ? err.message : String(err)
-        return json({ error: message }, 400)
-      }
+      const result = startAsyncSystemUpgrade()
+      return json(result, result.success ? 200 : 400)
     }
 
     // System Health & Diagnostics API

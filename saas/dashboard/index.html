@@ -1801,7 +1801,7 @@
       if (!confirm('Bạn có chắc chắn muốn tiến hành nâng cấp toàn bộ hệ thống Instatic CMS & các website instances?')) return;
       const btn = document.getElementById('btnUpgradeSystem');
       btn.disabled = true;
-      btn.textContent = '⏳ Đang nâng cấp hệ thống...';
+      btn.textContent = '⏳ Đang khởi chạy nâng cấp...';
 
       try {
         const res = await fetch(`${API_BASE}/admin/upgrade`, { method: 'POST' });
@@ -1813,16 +1813,42 @@
           data = { error: text || 'Phản hồi từ máy chủ không đúng định dạng JSON' };
         }
 
-        if (!res.ok) throw new Error(data.error || 'Nâng cấp thất bại');
+        if (!res.ok) throw new Error(data.error || 'Khởi chạy nâng cấp thất bại');
 
-        alert(data.message || 'Nâng cấp hệ thống thành công!');
-        await loadAdminSystemData();
+        alert(data.message || 'Đã bắt đầu nâng cấp hệ thống ngầm!');
+        pollUpgradeStatus();
       } catch (err) {
         alert(err.message);
-      } finally {
         btn.disabled = false;
         btn.textContent = '🚀 Nâng Cấp Hệ Thống 1-Click';
       }
+    }
+
+    function pollUpgradeStatus() {
+      const btn = document.getElementById('btnUpgradeSystem');
+      btn.disabled = true;
+      btn.textContent = '⏳ Đang nâng cấp hệ thống ngầm...';
+
+      const interval = setInterval(async () => {
+        try {
+          const res = await fetch(`${API_BASE}/admin/version`);
+          const status = await res.json();
+
+          if (!status.isUpdating) {
+            clearInterval(interval);
+            btn.disabled = false;
+            btn.textContent = '🚀 Nâng Cấp Hệ Thống 1-Click';
+            if (status.lastUpgradeError) {
+              alert(status.lastUpgradeError);
+            } else {
+              alert(status.lastUpgradeLog || 'Nâng cấp hệ thống thành công!');
+            }
+            await loadAdminSystemData();
+          }
+        } catch {
+          // Retry polling on next tick
+        }
+      }, 2000);
     }
 
     function applyTheme(theme) {

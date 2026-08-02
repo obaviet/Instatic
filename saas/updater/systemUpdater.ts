@@ -11,9 +11,14 @@ export interface UpdateStatus {
   updateAvailable: boolean
   isUpdating: boolean
   lastUpdated?: string
+  lastUpgradeLog?: string
+  lastUpgradeError?: string
 }
 
 let isUpgradeInProgress = false
+let lastUpgradeLog = ''
+let lastUpgradeError = ''
+let lastUpdatedTime = new Date().toISOString()
 
 async function execCmd(cmd: string): Promise<string> {
   const proc = Bun.spawn(cmd.split(' '), {
@@ -41,32 +46,60 @@ export async function getSystemVersionStatus(): Promise<UpdateStatus> {
     currentCommit,
     updateAvailable: false,
     isUpdating: isUpgradeInProgress,
-    lastUpdated: new Date().toISOString(),
+    lastUpdated: lastUpdatedTime,
+    lastUpgradeLog,
+    lastUpgradeError,
   }
 }
 
 /**
- * Performs a 1-click rolling upgrade: git pull, bun install, and rolling restart of all site instances.
+ * Starts 1-click system upgrade asynchronously in the background.
  */
-export async function performRollingSystemUpgrade(): Promise<{ success: boolean; message: string; restartedSitesCount: number }> {
+export function startAsyncSystemUpgrade(): { success: boolean; message: string } {
   if (isUpgradeInProgress) {
-    throw new Error('Hệ thống đang trong quá trình nâng cấp. Vui lòng chờ...')
+    return {
+      success: false,
+      message: 'Hệ thống đang trong quá trình nâng cấp. Vui lòng chờ...',
+    }
   }
 
+  // Trigger background upgrade process without blocking HTTP request
+  setTimeout(() => {
+    performRollingSystemUpgrade().catch((err) => {
+      console.error('[System Updater] Background upgrade error:', err)
+    })
+  }, 10)
+
+  return {
+    success: true,
+    message: 'Đã bắt đầu nâng cấp hệ thống ngầm! Quá trình đang được xử lý...',
+  }
+}
+
+/**
+ * Performs rolling upgrade: git pull, bun install, build:fast, and rolling restart of all site instances.
+ */
+export async function performRollingSystemUpgrade(): Promise<void> {
+  if (isUpgradeInProgress) return
   isUpgradeInProgress = true
+  lastUpgradeError = ''
+  lastUpgradeLog = 'Bắt đầu tiến trình nâng cấp hệ thống...'
+
   let restartedSitesCount = 0
 
   try {
     // 1. Pull latest code from Git repo
     console.log('[System Updater] Pulling latest code changes...')
+    lastUpgradeLog = 'Đang kéo mã nguồn mới nhất từ Git...'
     try {
       await execCmd('git pull origin main')
-    } catch {
-      console.log('[System Updater] Git pull skipped or not a git repository')
+    } catch (err) {
+      console.log('[System Updater] Git pull skipped or warning:', err)
     }
 
     // 2. Install dependencies & build production Admin UI assets
     console.log('[System Updater] Verifying dependencies & building dist assets...')
+    lastUpgradeLog = 'Đang kiểm tra thư viện & đóng gói giao diện...'
     try {
       await execCmd('bun install')
       await execCmd('bun run build:fast')
@@ -76,6 +109,7 @@ export async function performRollingSystemUpgrade(): Promise<{ success: boolean;
 
     // 3. Perform Rolling Restart of all running site instances
     console.log('[System Updater] Performing rolling restart of site instances...')
+    lastUpgradeLog = 'Đang khởi động lại các trang web con...'
     const sites = await listSites()
 
     for (const site of sites) {
@@ -84,7 +118,7 @@ export async function performRollingSystemUpgrade(): Promise<{ success: boolean;
           console.log(`[System Updater] Upgrading site instance: ${site.siteId} (Port ${site.port})`)
           stopSite(site.siteId)
           await new Promise((r) => setTimeout(r, 400))
-          await startSite(site.siteId) // Auto-runs database migrations on startup
+          await startSite(site.siteId)
           restartedSitesCount++
         } catch (err) {
           console.error(`[System Updater] Failed to restart site ${site.siteId}:`, err)
@@ -92,15 +126,13 @@ export async function performRollingSystemUpgrade(): Promise<{ success: boolean;
       }
     }
 
-    isUpgradeInProgress = false
-    return {
-      success: true,
-      message: `Nâng cấp hệ thống thành công! Đã áp dụng phiên bản mới và khởi động lại ${restartedSitesCount} trang web.`,
-      restartedSitesCount,
-    }
+    lastUpdatedTime = new Date().toISOString()
+    lastUpgradeLog = `Nâng cấp hệ thống thành công! Đã áp dụng phiên bản mới & khởi động lại ${restartedSitesCount} trang web.`
   } catch (err: unknown) {
-    isUpgradeInProgress = false
     const msg = err instanceof Error ? err.message : String(err)
-    throw new Error(`Nâng cấp hệ thống thất bại: ${msg}`)
+    lastUpgradeError = `Nâng cấp hệ thống thất bại: ${msg}`
+    console.error('[System Updater] Upgrade failed:', msg)
+  } finally {
+    isUpgradeInProgress = false
   }
 }
