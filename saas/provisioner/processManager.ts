@@ -2,6 +2,8 @@
  * Process Manager — Manages background Bun subprocesses for site instances.
  */
 
+import path from 'node:path'
+
 export interface ManagedInstanceProcess {
   siteId: string
   port: number
@@ -33,7 +35,7 @@ export function spawnSiteProcess(
     PORT: String(port),
     DATABASE_URL: `sqlite:${dbPath}`,
     UPLOADS_DIR: uploadsDir,
-    STATIC_DIR: './dist',
+    STATIC_DIR: path.join(rootDir, 'dist'),
   }
 
   const child = Bun.spawn(command, {
