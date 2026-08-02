@@ -89,8 +89,9 @@ export function expectedOrigin(req: Request): string {
   const configured = publicOrigins[0]
   if (configured) return configured
   const fallback = new URL(req.url)
-  const proto = fallback.protocol.replace(':', '').toLowerCase()
-  const host = req.headers.get('host') ?? fallback.host
+  const forwardedProto = req.headers.get('x-forwarded-proto')
+  const proto = (forwardedProto ?? fallback.protocol.replace(':', '')).toLowerCase()
+  const host = req.headers.get('x-forwarded-host') ?? req.headers.get('host') ?? fallback.host
   return `${proto}://${host}`
 }
 

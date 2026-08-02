@@ -74,8 +74,9 @@ export function createProxyServer(proxyPort = 8080) {
       }
 
       const headers = new Headers(req.headers)
+      const protoHeader = req.headers.get('x-forwarded-proto') ?? url.protocol.replace(':', '')
       headers.set('X-Forwarded-Host', hostHeader)
-      headers.set('X-Forwarded-Proto', url.protocol.replace(':', ''))
+      headers.set('X-Forwarded-Proto', protoHeader)
 
       try {
         const response = await fetch(targetUrl.toString(), {
